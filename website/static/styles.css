@@ -1,0 +1,174 @@
+.header-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.header-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.header-img {
+    height: 120px; 
+    width: auto;
+}
+
+/* Ensure smaller screens handle layout correctly */
+@media (max-width: 768px) {
+    .header-title {
+        font-size: 20px;
+    }
+
+    .header-img {
+        height: 80px;
+    }
+}
+
+@media (max-width: 576px) {
+    .left-img, .right-img {
+        display: none;
+    }
+
+    .header-title {
+        position: static;
+        transform: none;
+        text-align: center;
+        width: 100%;
+    }
+}
+
+body {
+    background-color: #f8f9fa;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+.header-img {
+    height: 120px;
+    width: auto;
+}
+
+.sector-btn {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.dropdown-container {
+    width: 33%;
+    margin: 0 auto;
+}
+
+.sector-btn[data-sector="Energy"] {
+    background-color: #b5de2b;
+    color: white;
+}
+
+.sector-btn[data-sector="Services"] {
+    background-color: #1f9e89;
+    color: white;
+}
+
+.sector-btn[data-sector="Manufacturing"] {
+    background-color: #31688e;
+    color: white;
+}
+
+.sector-btn[data-sector="Automotive"] {
+    background-color: #482878;
+    color: white;
+}
+
+.question-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.question-response-pair {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.question-response-pair hr {
+    width: 100%;
+    border: 1px solid #ccc;
+}
+
+.full-width-line {
+    width: 100%;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.question-container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ensure question and response fields are equal height */
+.question-response-pair {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 40px;
+    padding-bottom: 5px;
+}
+
+.question-text {
+    flex: 1;
+    padding-right: 10px;
+    display: flex;
+    align-items: center;
+    height: 38px;
+}
+
+.response-box {
+    flex: 1;
+    height: 38px;
+    padding: 5px;
+}
+
+/* Ensure lines extend fully below the question-response pair */
+.full-width-line {
+    width: 100%;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.d-flex.justify-content-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+button[name="change_year"] {
+    min-width: 120px;
+}
+
+.previous-year-container {
+    width: 50%;
+    text-align: right;
+    padding-right: 10px;
+}
+
+.current-year {
+    min-width: 120px;
+    text-align: center;
+    font-weight: bold;
+}

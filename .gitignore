@@ -1,0 +1,27 @@
+# editor and environment
+.vscode/
+.idea/
+.*env/
+venv/
+*venv/
+ENV/
+.DS_Store
+
+# pycache
+__pycache__/
+*.py[cod]
+*.so
+
+# generated outputs
+generated_spider.png
+generated_timeseries.png
+index_data.csv
+
+# docker
+*.log
+*.pid
+*.gz
+*.sqlite3
+# ensure prod compose doesn't have any sensitive info
+# use the override for local dev setup
+docker-compose.override.yml

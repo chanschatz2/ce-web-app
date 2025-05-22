@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Select Sector - Circularity Index{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <h2>Select Your Sector</h2>
+    <form method="post" action="/">
+        <!-- 2x2 Grid Layout for Sector Buttons -->
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-6">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-primary sector-btn w-100 py-4" data-sector="Energy">Energy</button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn btn-success sector-btn w-100 py-4" data-sector="Services">Services</button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn btn-warning sector-btn w-100 py-4" data-sector="Manufacturing">Manufacturing</button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn btn-danger sector-btn w-100 py-4" data-sector="Automotive">Automotive</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Industry Dropdown (Initially Hidden) -->
+        <div id="industry-selection" class="mt-4 d-none">
+            <label for="industry" class="form-label">Select Your Industry:</label>
+            <div class="dropdown-container">
+                <select id="industry" name="industry" class="form-select">
+                    <option value="">-- Select an Industry --</option>
+                </select>
+            </div>
+        </div>
+
+        <input type="hidden" name="sector" id="selected-sector">
+        
+        <!-- Proceed Button (Initially Hidden) -->
+        <button type="submit" id="proceed-btn" class="btn btn-dark mt-3 d-none">Proceed</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const industries = JSON.parse('{{ industries | tojson | safe }}');
+
+        document.querySelectorAll(".sector-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                let selectedSector = this.getAttribute("data-sector");
+                document.getElementById("selected-sector").value = selectedSector;
+
+                let industryDropdown = document.getElementById("industry");
+                industryDropdown.innerHTML = '<option value="">-- Select an Industry --</option>';
+
+                industries[selectedSector].forEach(industry => {
+                    let option = document.createElement("option");
+                    option.value = industry;
+                    option.textContent = industry;
+                    industryDropdown.appendChild(option);
+                });
+
+                document.getElementById("industry-selection").classList.remove("d-none");
+                document.getElementById("proceed-btn").classList.add("d-none");
+            });
+        });
+
+        document.getElementById("industry").addEventListener("change", function () {
+            if (this.value) {
+                document.getElementById("proceed-btn").classList.remove("d-none");
+            } else {
+                document.getElementById("proceed-btn").classList.add("d-none");
+            }
+        });
+    });
+</script>
+{% endblock %}

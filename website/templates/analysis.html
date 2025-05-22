@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Analysis - Circularity Index{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">Circularity Analysis</h2>
+
+    <div class="mt-5">
+        <h4 class="text-center">Ciruclarity Indices ({{current_year}})</h4>
+        <div class="text-center">
+            <img src="{{ url_for('static', filename='generated_spider.png') }}" alt="Spider Plot Placeholder" class="img-fluid" style="max-width: 600px;">
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="mt-5">
+        <h4 class="text-center">Circular Economy Index Over Time</h4>
+        <div class="text-center">
+            <img src="{{ url_for('static', filename='generated_timeseries.png') }}" alt="Time Series Plot Placeholder" class="img-fluid" style="max-width: 600px;">
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-5 mb-4">
+    <a href="{{ url_for('data_input.data_input_page') }}?year={{ current_year }}" class="btn btn-outline-primary me-3">
+        Edit Responses
+    </a>
+    <a href="{{ url_for('views.index') }}" class="btn btn-outline-danger">
+        Start Over
+    </a>
+</div>
+{% endblock %}

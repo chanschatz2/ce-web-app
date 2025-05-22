@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Data Input - Circularity Index{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">Data Input - Circularity Index</h2>
+
+    <form method="post" action="{{ url_for('data_input.data_input_page') }}" enctype="multipart/form-data">
+
+        <input type="hidden" name="year" value="{{ current_year }}">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <button type="submit" name="download_excel" value="true" class="btn btn-outline-success">
+                Download Excel
+            </button>
+            <input type="file" name="excel_file" class="form-control d-inline" style="width: auto; display: inline-block;">
+            <button type="submit" name="upload_excel" value="true" class="btn btn-outline-primary ms-2">
+                Import Excel
+            </button>
+
+            <div class="d-flex align-items-center">
+                <button type="submit" name="change_year" value="prev" class="btn btn-outline-secondary me-2">
+                    &larr; Previous Year
+                </button>
+    
+                <h3 class="current-year mb-0">{{ current_year }}</h3>
+    
+                <button type="submit" name="change_year" value="next" class="btn btn-outline-secondary ms-2">
+                    Next Year &rarr;
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Questions Column -->
+            <div class="col-md-6">
+                <div class="p-3 border bg-light">
+                    <h4>Questions</h4>
+                    <div class="question-container">
+                        {% for q_id, question in questions.items() %}
+                        <div class="question-response-pair">
+                            <p class="mb-0 question-text"><strong>{{ question }}</strong></p>
+                        </div>
+                        <hr class="full-width-line">
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Responses Column -->
+            <div class="col-md-6">
+                <div class="p-3 border">
+                    <h4>Your Responses</h4>
+                    <div class="question-container">
+                        {% for q_id in questions.keys() %}
+                        <div class="question-response-pair">
+                            <input type="text" class="form-control response-box" name="response_{{ q_id }}" 
+                                   value="{{ responses.get(q_id, '') }}">
+                        </div>
+                        <hr class="full-width-line">
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Save Button Centered Below Both Columns -->
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">Visualize Responses</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
