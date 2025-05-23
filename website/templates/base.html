@@ -8,19 +8,19 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <!-- header -->
+    <!-- Header -->
     <header class="container-fluid bg-light py-3 header-container">
         <img src="{{ url_for('static', filename='left_image.png') }}" alt="Left Logo" class="header-img left-img">
         <h1 class="header-title">CIRCULARITY INDEX CALCULATOR</h1>
         <img src="{{ url_for('static', filename='right_image.png') }}" alt="Right Logo" class="header-img right-img">
     </header>
 
-    <!-- main block -->
+    <!-- Main content block -->
     <main class="container mt-4">
         {% block content %}{% endblock %}
     </main>
 
-    <!-- footer -->
+    <!-- Footer -->
     <footer class="text-center py-3">
         <small> Developed at the University of Wisconsin-Madison, Avraamidou Research Group </small>
     </footer>

@@ -6,10 +6,12 @@
 <div class="container mt-4">
     <h2 class="text-center">Data Input - Circularity Index</h2>
 
+    <!-- Form holds all POST input -->
     <form method="post" action="{{ url_for('data_input.data_input_page') }}" enctype="multipart/form-data">
 
         <input type="hidden" name="year" value="{{ current_year }}">
 
+        <!-- Box that holds download, upload, and change year buttons-->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <button type="submit" name="download_excel" value="true" class="btn btn-outline-success">
                 Download Excel
@@ -65,7 +67,7 @@
             </div>
         </div>
 
-        <!-- Save Button Centered Below Both Columns -->
+        <!-- Save Button -->
         <div class="text-center mt-4">
             <button type="submit" name="visualize" value="true" class="btn btn-primary">Visualize Responses</button>
         </div>

@@ -6,6 +6,7 @@
 <div class="container mt-4">
     <h2 class="text-center">Circularity Analysis</h2>
 
+    <!-- Generated Spider / Radar Plot -->
     <div class="mt-5">
         <h4 class="text-center">Ciruclarity Indices ({{current_year}})</h4>
         <div class="text-center">
@@ -15,6 +16,7 @@
 
     <hr>
 
+    <!-- Generated CE Index Timeseries -->
     <div class="mt-5">
         <h4 class="text-center">Circular Economy Index Over Time</h4>
         <div class="text-center">
@@ -23,6 +25,7 @@
     </div>
 </div>
 
+<!-- Edit or Start Over Buttons -->
 <div class="text-center mt-5 mb-4">
     <a href="{{ url_for('data_input.data_input_page') }}?year={{ current_year }}" class="btn btn-outline-primary me-3">
         Edit Responses

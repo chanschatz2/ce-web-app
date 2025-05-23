@@ -6,7 +6,7 @@
 <div class="container text-center mt-5">
     <h2>Select Your Sector</h2>
     <form method="post" action="/">
-        <!-- 2x2 Grid Layout for Sector Buttons -->
+        <!-- Sector Buttons -->
         <div class="row justify-content-center mt-3">
             <div class="col-md-6">
                 <div class="row g-3">
@@ -26,7 +26,7 @@
             </div>
         </div>
 
-        <!-- Industry Dropdown (Initially Hidden) -->
+        <!-- Industry Dropdown -->
         <div id="industry-selection" class="mt-4 d-none">
             <label for="industry" class="form-label">Select Your Industry:</label>
             <div class="dropdown-container">
@@ -38,11 +38,12 @@
 
         <input type="hidden" name="sector" id="selected-sector">
         
-        <!-- Proceed Button (Initially Hidden) -->
+        <!-- Proceed Button -->
         <button type="submit" id="proceed-btn" class="btn btn-dark mt-3 d-none">Proceed</button>
     </form>
 </div>
 
+<!-- JS reveals buttons and creates dropdowns -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const industries = JSON.parse('{{ industries | tojson | safe }}');

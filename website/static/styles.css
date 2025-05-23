@@ -1,3 +1,22 @@
+/*
+   Layout & General
+*/
+body {
+    background-color: #f8f9fa;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+/*
+    Header Styling
+*/
 .header-container {
     position: relative;
     display: flex;
@@ -20,7 +39,9 @@
     width: auto;
 }
 
-/* Ensure smaller screens handle layout correctly */
+/*
+    Mobile Header Adjustments
+*/
 @media (max-width: 768px) {
     .header-title {
         font-size: 20px;
@@ -44,32 +65,12 @@
     }
 }
 
-body {
-    background-color: #f8f9fa;
-}
-
-h1 {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-h2 {
-    margin-bottom: 20px;
-}
-
-.header-img {
-    height: 120px;
-    width: auto;
-}
-
+/*
+   Sector Button Styling
+*/
 .sector-btn {
     font-size: 20px;
     font-weight: bold;
-}
-
-.dropdown-container {
-    width: 33%;
-    margin: 0 auto;
 }
 
 .sector-btn[data-sector="Energy"] {
@@ -92,6 +93,17 @@ h2 {
     color: white;
 }
 
+/*
+   Dropdown & Forms
+*/
+.dropdown-container {
+    width: 33%;
+    margin: 0 auto;
+}
+
+/*
+   Data Input Page
+*/
 .question-container {
     display: flex;
     flex-direction: column;
@@ -101,30 +113,6 @@ h2 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-.question-response-pair hr {
-    width: 100%;
-    border: 1px solid #ccc;
-}
-
-.full-width-line {
-    width: 100%;
-    border: 1px solid #ccc;
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
-.question-container {
-    display: flex;
-    flex-direction: column;
-}
-
-/* Ensure question and response fields are equal height */
-.question-response-pair {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     min-height: 40px;
     padding-bottom: 5px;
 }
@@ -143,7 +131,6 @@ h2 {
     padding: 5px;
 }
 
-/* Ensure lines extend fully below the question-response pair */
 .full-width-line {
     width: 100%;
     border: 1px solid #ccc;
@@ -151,6 +138,9 @@ h2 {
     margin-bottom: 5px;
 }
 
+/*
+   Year Navigation Controls
+*/
 .d-flex.justify-content-between {
     display: flex;
     align-items: center;

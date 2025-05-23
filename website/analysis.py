@@ -7,12 +7,10 @@ import datetime
 
 analysis = Blueprint("analysis", __name__)
 
-#YEAR_CURRENT = "2025"
 YEAR_CURRENT = str(datetime.datetime.now().year)
 
 @analysis.route("/analysis", methods=["GET", "POST"])
 def analysis_page():
-    # resp
     responses = session.get("responses_by_year")
     if not responses:
         return render_template("analysis.html")
@@ -24,7 +22,6 @@ def analysis_page():
     year_index_data = {}
     for year, yr_responses in responses.items():
         try:
-            #print(yr_responses)
             indexes = compute_indices(yr_responses)
             year_index_data[year] = indexes
         except Exception as e:
@@ -39,9 +36,6 @@ def analysis_page():
             value = index_dict[key]
             # clamp
             index_dict[key] = max(min(value, 1), 0)
-    
-    print("YR INDEX DATA")
-    print(year_index_data)
 
     # df and ce index
     df = pd.DataFrame.from_dict(year_index_data, orient='index')
