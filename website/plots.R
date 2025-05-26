@@ -4,18 +4,25 @@ if (!require("ggplot2")) install.packages("ggplot2", repos = "https://cloud.r-pr
 
 library(fmsb)
 library(ggplot2)
+# FILEPATH
 #/Users/oliverchanschatz/Documents/CE Economy Research/Web App/website/static/index_data.csv
 
 args = commandArgs(trailingOnly=TRUE)
 csv_path = args[1]
 output_dir = args[2]
+radar_year = as.numeric(args[3])
 
 df = read.csv(csv_path)
 
-latest = df[nrow(df), c("index_energy", "index_water", "index_emissions", "index_waste")]
-radar_data = rbind(rep(1, 4), rep(0, 4), latest)
+target_row = df[df$year == radar_year, c("index_energy", "index_water", "index_emissions", "index_waste")]
+
+# Check if the year was found; fallback if not
+if (nrow(target_row) == 0) {
+  stop(paste("No data found for year ", radar_year))
+}
+
+radar_data = rbind(rep(1, 4), rep(0, 4), target_row)
 colnames(radar_data) = c("Energy", "Water", "Emissions", "Waste")
-print(radar_data)
 
 spider_path = file.path(output_dir, "generated_spider.png")
 png(spider_path, width = 600, height = 600)

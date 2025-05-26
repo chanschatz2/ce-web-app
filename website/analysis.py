@@ -7,16 +7,11 @@ import datetime
 
 analysis = Blueprint("analysis", __name__)
 
-YEAR_CURRENT = str(datetime.datetime.now().year)
-
 @analysis.route("/analysis", methods=["GET", "POST"])
 def analysis_page():
     responses = session.get("responses_by_year")
     if not responses:
         return render_template("analysis.html")
-
-    print("RESPONSES ANALYTICS:")
-    print(responses)
 
     # index values
     year_index_data = {}
@@ -51,17 +46,21 @@ def analysis_page():
     csv_path = os.path.join(static_dir, "index_data.csv")
     df.reset_index().to_csv(csv_path, index=False)
 
-    # plots.R args
+    # Year to use for radar plot
+    if str(session["current_year"]) in year_index_data:
+        radar_year = str(session["current_year"])
+    else: # if user visualizes on a year with no data, pick latest that has data
+        radar_year = max(year_index_data.keys())
+
+    # other plots.R args
     r_script_path = os.path.join(base_dir, "plots.R")
     csv_path = os.path.join(static_dir, "index_data.csv")
 
     try:
-        subprocess.run(["Rscript", r_script_path, csv_path, static_dir], check=True)
+        subprocess.run(["Rscript", r_script_path, csv_path, static_dir, radar_year], check=True)
     except subprocess.CalledProcessError as e:
         print("R script failed:", e)
         return render_template("analysis.html", error="Failed to generate plots")
     
-    year_out = YEAR_CURRENT if YEAR_CURRENT != None else session["YEAR_CURRENT"]
-
     # render with new plots
-    return render_template("analysis.html", current_year = year_out)
+    return render_template("analysis.html", current_year = radar_year)
