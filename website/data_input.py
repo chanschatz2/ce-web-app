@@ -4,6 +4,7 @@ import pandas as pd
 import io
 import copy
 import datetime
+from flask import flash
 
 data_input = Blueprint("data_input", __name__)
 
@@ -79,7 +80,7 @@ def excel_upload(file, responses):
                 responses[year] = {}
 
             if str(row[year]) != 'nan':
-                responses[year][str(q_id)] = str(int(row[year]))
+                responses[year][str(q_id)] = str(float(row[year]))
             elif str(row[year]) == "nan":
                 responses[year][str(q_id)] = ""
 
@@ -105,12 +106,28 @@ def data_input_page():
     if request.method == "POST":        
         request_year = int(request.form.get("year", current_year))
 
-        # Map question IDs to responses to ensure correct loading
+        # Input Processing: Map question IDs to responses to ensure correct loading
+        # Flag if non-numeric found
+        flash_flag = False
+
         responses = {}
         for key, value in request.form.items():
             if key.startswith("response_"):
                 q_id = key.split("response_")[1]
-                responses[q_id] = value
+                value = value.strip()
+
+                # Flash if non-numeric found, and stop button
+                if value and not value.replace('.', '', 1).isdigit(): # removes decimal char
+                    flash_flag = True
+                    #responses[q_id] = value <- UNCOMMENT IF WANT TO KEEP ON FLASH
+                else:
+                    responses[q_id] = value
+
+        # If non-numeric found, flash error and stop POST request
+        if flash_flag:
+            flash(f"Responses must be numerics. Non-numeric response(s) removed.", "danger")
+            return render_template("data_input.html", questions=sec_questions,
+                        responses=responses, current_year=current_year)
 
         if str(request_year) not in session["responses_by_year"]:
             session["responses_by_year"][str(request_year)] = {}

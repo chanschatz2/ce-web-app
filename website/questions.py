@@ -74,7 +74,7 @@ def compute_indices(data, category="Energy&Utilities"):
 
     for q_id in category_questions:
         if data.get(str(q_id), 0) != '':
-            values[q_id] = int(data.get(str(q_id), 0))
+            values[q_id] = float(data.get(str(q_id), 0))
         else:
             values[q_id] = 0
             
