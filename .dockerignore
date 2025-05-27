@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.DS_Store
+.vscode/
+*.sqlite3
+*.xlsx
+
+# generated outputs
+generated_spider.png
+generated_timeseries.png
+index_data.csv

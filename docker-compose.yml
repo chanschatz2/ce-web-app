@@ -1,0 +1,6 @@
+services:
+  ce_app:
+    build: .
+    ports:
+      - "8080:5000"
+    command: python3 main.py
