@@ -3,45 +3,52 @@
 {% block title %}Select Sector - Circularity Index{% endblock %}
 
 {% block content %}
+<form method="post" action="/">
 <div class="container text-center mt-5">
+    <!-- Company/User ID Input -->
+    <div class="mb-4 mx-auto" style="max-width: 400px;">
+        <label for="company_id" class="form-label">Enter Company or User ID:</label>
+        <input type="text" class="form-control" name="company_id" id="company_id" required>
+    </div>
+
     <h2>Select Your Sector</h2>
-    <form method="post" action="/">
-        <!-- Sector Buttons -->
-        <div class="row justify-content-center mt-3">
-            <div class="col-md-6">
-                <div class="row g-3">
-                    <div class="col-6">
-                        <button type="button" class="btn btn-primary sector-btn w-100 py-4" data-sector="Energy">Energy</button>
-                    </div>
-                    <div class="col-6">
-                        <button type="button" class="btn btn-success sector-btn w-100 py-4" data-sector="Services">Services</button>
-                    </div>
-                    <div class="col-6">
-                        <button type="button" class="btn btn-warning sector-btn w-100 py-4" data-sector="Manufacturing">Manufacturing</button>
-                    </div>
-                    <div class="col-6">
-                        <button type="button" class="btn btn-danger sector-btn w-100 py-4" data-sector="Automotive">Automotive</button>
-                    </div>
+
+    <!-- Sector Buttons -->
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-6">
+            <div class="row g-3">
+                <div class="col-6">
+                    <button type="button" class="btn btn-primary sector-btn w-100 py-4" data-sector="Energy">Energy</button>
+                </div>
+                <div class="col-6">
+                    <button type="button" class="btn btn-success sector-btn w-100 py-4" data-sector="Services">Services</button>
+                </div>
+                <div class="col-6">
+                    <button type="button" class="btn btn-warning sector-btn w-100 py-4" data-sector="Manufacturing">Manufacturing</button>
+                </div>
+                <div class="col-6">
+                    <button type="button" class="btn btn-danger sector-btn w-100 py-4" data-sector="Automotive">Automotive</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Industry Dropdown -->
-        <div id="industry-selection" class="mt-4 d-none">
-            <label for="industry" class="form-label">Select Your Industry:</label>
-            <div class="dropdown-container">
-                <select id="industry" name="industry" class="form-select">
-                    <option value="">-- Select an Industry --</option>
-                </select>
-            </div>
+    <!-- Industry Dropdown -->
+    <div id="industry-selection" class="mt-4 d-none">
+        <label for="industry" class="form-label">Select Your Industry:</label>
+        <div class="dropdown-container">
+            <select id="industry" name="industry" class="form-select">
+                <option value="">-- Select an Industry --</option>
+            </select>
         </div>
+    </div>
 
-        <input type="hidden" name="sector" id="selected-sector">
-        
-        <!-- Proceed Button -->
-        <button type="submit" id="proceed-btn" class="btn btn-dark mt-3 d-none">Proceed</button>
-    </form>
+    <input type="hidden" name="sector" id="selected-sector">
+    
+    <!-- Proceed Button -->
+    <button type="submit" id="proceed-btn" class="btn btn-dark mt-3 d-none">Proceed</button>
 </div>
+</form>
 
 <!-- JS reveals buttons and creates dropdowns -->
 <script>

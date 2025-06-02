@@ -24,5 +24,19 @@
     <footer class="text-center py-3">
         <small> Developed at the University of Wisconsin-Madison, Avraamidou Research Group </small>
     </footer>
+
+    <!-- Ensures not submitting on "enter" in index.html -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const companyInput = document.getElementById("company_id");
+            if (companyInput) {
+                companyInput.addEventListener("keydown", function (e) {
+                    if (e.key === "Enter") {
+                        e.preventDefault(); // just silently stop the enter key from submitting
+                    }
+                });
+            }
+        });
+    </script>      
 </body>
 </html>

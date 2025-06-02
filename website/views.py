@@ -18,6 +18,7 @@ INDUSTRIES = {
 @views.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
+        company_id = request.form.get("company_id")
         sector = request.form.get("sector")
         industry = request.form.get("industry")
 
@@ -25,6 +26,7 @@ def index():
         if sector == "Energy":
             sector = "Energy&Utilities"
 
+        session['company_id'] = company_id
         session['sector'] = sector
 
         return redirect(url_for("data_input.data_input_page", sector=sector, industry=industry))
