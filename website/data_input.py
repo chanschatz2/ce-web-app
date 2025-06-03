@@ -5,6 +5,7 @@ import io
 import copy
 import datetime
 from flask import flash
+from . import get_db
 
 data_input = Blueprint("data_input", __name__)
 
@@ -86,6 +87,17 @@ def excel_upload(file, responses):
 
     return responses
 
+def print_db(cur):
+    print("\n DEBUG: Companies", flush=True)
+    cur.execute("SELECT * FROM companies")
+    for row in cur.fetchall():
+        print(row, flush=True)
+
+    print("\n DEBUG: Responses", flush=True)
+    cur.execute("SELECT * FROM responses ORDER BY company_id, year, question_id")
+    for row in cur.fetchall():
+        print(row, flush=True)
+
 @data_input.route('/data_input', methods=['GET', 'POST'])
 def data_input_page():
     session.setdefault("YEAR_CURRENT", str(datetime.datetime.now().year))
@@ -102,6 +114,42 @@ def data_input_page():
     sec_questions = get_questions(sector)
     responses_by_year = session["responses_by_year"]
     current_year = session["current_year"]
+
+    # If arriving from analysis page Edit Responses, re-pull for db
+    if request.args.get("from_analysis") == "true":
+        session.pop("responses_loaded", None)
+
+    """
+    
+        Current SQL logic (Jun 3 25):
+        - Read and write company responses only when entering and leaving data_input page
+        - To be wary of data_input route refreshes (year change, download, etc), track entering
+            page with session["responses_loaded"] to flag when to pull responses
+        - Unflag session["responses_loaded"] when outside data_input
+            - e.g., analysis page Edit Responses button, root route, etc
+
+    """
+
+    if request.method == "GET":
+        # LOAD RESPONSES FROM DATABASE ONCE
+        if "responses_loaded" not in session:
+            company_id = session["company_id"]
+            db = get_db()
+            cur = db.cursor()
+            cur.execute("SELECT year, question_id, response FROM responses WHERE company_id = %s", (company_id,))
+            rows = cur.fetchall()
+
+            responses_by_year = {}
+            for year, qid, val in rows:
+                year = str(year)
+                if year not in responses_by_year:
+                    responses_by_year[year] = {}
+                responses_by_year[year][qid] = val
+
+            session["responses_by_year"] = responses_by_year
+            session["responses_loaded"] = True
+
+            print_db(cur)
 
     if request.method == "POST":        
         request_year = int(request.form.get("year", current_year))
@@ -172,6 +220,22 @@ def data_input_page():
                            responses=responses, current_year=current_year)
         
         if request.form.get("visualize") == "true":
+            # Only writing to db when done editing responses
+            company_id = session["company_id"]
+            current_year = session["current_year"]
+            responses_by_year = session["responses_by_year"]
+            db = get_db()
+            cur = db.cursor()
+
+            for year, year_data in responses_by_year.items():
+                for q_id, value in year_data.items():
+                    cur.execute("""
+                        INSERT INTO responses (company_id, year, question_id, response)
+                        VALUES (%s, %s, %s, %s)
+                        ON CONFLICT (company_id, year, question_id)
+                        DO UPDATE SET response = EXCLUDED.response
+                    """, (company_id, int(year), q_id, value))
+            db.commit()
             return redirect(url_for("analysis.analysis_page"))
 
         # Ensure responses_by_year is not sparse

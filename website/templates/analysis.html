@@ -27,7 +27,7 @@
 
 <!-- Edit or Start Over Buttons -->
 <div class="text-center mt-5 mb-4">
-    <a href="{{ url_for('data_input.data_input_page') }}?year={{ current_year }}" class="btn btn-outline-primary me-3">
+    <a href="{{ url_for('data_input.data_input_page') }}?year={{ current_year }}&from_analysis=true" class="btn btn-outline-primary me-3">
         Edit Responses
     </a>
     <a href="{{ url_for('views.index') }}" class="btn btn-outline-danger">

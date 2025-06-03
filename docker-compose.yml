@@ -4,3 +4,18 @@ services:
     ports:
       - "8080:5000"
     command: python3 main.py
+    
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: ce_app
+      POSTGRES_USER: ce_user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  pgdata:
