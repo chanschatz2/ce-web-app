@@ -1,7 +1,11 @@
 """
 
     Only need to call this once to initialize the database with schema.sql.
-    The compose volume will have it persist on disk through future container creations.
+    - Will wipe all data (as def. in schema.sql)
+
+    The compose volume will persist db on disk through future container creations.
+
+    Ensure hostname is "localhost" in init.py when running this outside a container.
 
 """
 

@@ -1,6 +1,10 @@
+DROP TABLE IF EXISTS responses;
+DROP TABLE IF EXISTS companies;
+
 CREATE TABLE companies (
     id TEXT PRIMARY KEY,
-    sector TEXT
+    sector TEXT,
+    password TEXT
 );
 
 CREATE TABLE responses (

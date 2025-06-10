@@ -81,10 +81,12 @@
             </div>
         </div>
 
-        <!-- Save Button -->
-        <div class="text-center mt-4">
+        <!-- Save and Back to Dashboard Buttons -->
+        <div class="d-flex justify-content-center mt-4 gap-2">
+            <a href="{{ url_for('views.dashboard') }}" class="btn btn-outline-secondary">Back to Dashboard</a>
             <button type="submit" name="visualize" value="true" class="btn btn-primary">Visualize Responses</button>
         </div>
+
     </form>
 </div>
 {% endblock %}

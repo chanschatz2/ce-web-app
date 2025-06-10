@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 bg-light p-4 border-end" style="min-height: 100vh;">
+            <h4 class="mb-4">Tools</h4>
+            <div class="d-grid gap-3">
+                <a href="{{ url_for('views.selection') }}" class="btn btn-outline-primary">Begin Circularity Calculation</a>
+                <a href="{{ url_for('views.clear_session') }}" class="btn btn-outline-primary">DEBUG: Clear Session</a>
+                <a class="btn btn-outline-primary">History</a>
+                <a class="btn btn-outline-primary">Help</a>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-md-9 p-5">
+            <h2>Welcome, {{ session.company_id }}</h2>
+            <p class="lead mt-4">Central hub for navigating the Circularity Index Web App.</p>
+            <p class="text-muted">(Main content and description of the app TBD)</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

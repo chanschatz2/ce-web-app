@@ -3,14 +3,8 @@
 {% block title %}Select Sector - Circularity Index{% endblock %}
 
 {% block content %}
-<form method="post" action="/">
+<form method="post" action="{{ url_for('views.selection') }}">
 <div class="container text-center mt-5">
-    <!-- Company/User ID Input -->
-    <div class="mb-4 mx-auto" style="max-width: 400px;">
-        <label for="company_id" class="form-label">Enter Company or User ID:</label>
-        <input type="text" class="form-control" name="company_id" id="company_id" required>
-    </div>
-
     <h2>Select Your Sector</h2>
 
     <!-- Sector Buttons -->
@@ -45,8 +39,12 @@
 
     <input type="hidden" name="sector" id="selected-sector">
     
-    <!-- Proceed Button -->
-    <button type="submit" id="proceed-btn" class="btn btn-dark mt-3 d-none">Proceed</button>
+    <!-- Proceed and Back to Dashboard Buttons -->
+    <div class="d-flex justify-content-center mt-3 gap-2 d-none" id="button-row">
+        <a href="{{ url_for('views.dashboard') }}" class="btn btn-outline-secondary" type="button">Back to Dashboard</a>
+        <button type="submit" id="proceed-btn" class="btn btn-primary">Proceed</button>
+    </div>
+
 </div>
 </form>
 
@@ -57,30 +55,24 @@
 
         document.querySelectorAll(".sector-btn").forEach(button => {
             button.addEventListener("click", function () {
-                let selectedSector = this.getAttribute("data-sector");
-                document.getElementById("selected-sector").value = selectedSector;
+                document.getElementById("selected-sector").value = this.getAttribute("data-sector");
 
-                let industryDropdown = document.getElementById("industry");
+                const industryDropdown = document.getElementById("industry");
                 industryDropdown.innerHTML = '<option value="">-- Select an Industry --</option>';
 
-                industries[selectedSector].forEach(industry => {
-                    let option = document.createElement("option");
+                industries[this.getAttribute("data-sector")].forEach(industry => {
+                    const option = document.createElement("option");
                     option.value = industry;
                     option.textContent = industry;
                     industryDropdown.appendChild(option);
                 });
 
                 document.getElementById("industry-selection").classList.remove("d-none");
-                document.getElementById("proceed-btn").classList.add("d-none");
             });
         });
 
         document.getElementById("industry").addEventListener("change", function () {
-            if (this.value) {
-                document.getElementById("proceed-btn").classList.remove("d-none");
-            } else {
-                document.getElementById("proceed-btn").classList.add("d-none");
-            }
+            document.getElementById("button-row").classList.toggle("d-none", !this.value);
         });
     });
 </script>
