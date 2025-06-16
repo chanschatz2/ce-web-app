@@ -1,14 +1,17 @@
+import os
 from flask import Flask, g
 import psycopg2
+from dotenv import load_dotenv
+
+load_dotenv() # load env variables
 
 def get_db():
     if "db" not in g:
         g.db = psycopg2.connect(
-            host="db",  # since running in container, matches compose service name
-                        # use "localhost" outside container
-            database="ce_app",
-            user="ce_user",
-            password="password"
+            host=os.environ.get("DB_HOST"),
+            database=os.environ.get("DB_NAME"),
+            user=os.environ.get("DB_USER"),
+            password=os.environ.get("DB_PASSWORD")
         )
     return g.db
 
@@ -20,8 +23,8 @@ def close_db(e=None):
 def create_app():
     app = Flask(__name__)
 
-    #app.config["SECRET KEY"] = "secret key"
-    app.secret_key = "secret key" # session key
+    #app.config["SECRET KEY"] = "secret_key"
+    app.secret_key = os.environ.get("FLASK_SECRET_KEY")
     app.teardown_appcontext(close_db) # closes db on crash
 
     from .views import views

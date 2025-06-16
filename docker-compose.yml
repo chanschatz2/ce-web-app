@@ -4,6 +4,8 @@ services:
     ports:
       - "8080:5000"
     command: python3 main.py
+    env_file:
+      - .env
     
   db:
     image: postgres:16
