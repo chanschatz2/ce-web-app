@@ -11,9 +11,10 @@
 
 from website import create_app, get_db
 
-app = create_app()
+#app = create_app()
 
-with app.app_context():  # ensures session and g are available
+def init_schema():
+    #with app.app_context():  # ensures session and g are available
     with open("schema.sql", "r") as f:
         sql_script = f.read()
 

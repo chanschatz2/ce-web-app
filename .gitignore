@@ -26,3 +26,6 @@ index_data.csv
 # ensure prod compose doesn't have any sensitive info
 # use the override for local dev setup
 docker-compose.override.yml
+
+# scripts
+azure_push.sh

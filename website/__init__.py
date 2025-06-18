@@ -8,10 +8,11 @@ load_dotenv() # load env variables
 def get_db():
     if "db" not in g:
         g.db = psycopg2.connect(
-            host=os.environ.get("DB_HOST"),
-            database=os.environ.get("DB_NAME"),
-            user=os.environ.get("DB_USER"),
-            password=os.environ.get("DB_PASSWORD")
+            host=os.environ.get("PGHOST"),
+            database=os.environ.get("PGDATABASE"),
+            user=os.environ.get("PGUSER"),
+            password=os.environ.get("PGPASSWORD"),
+            port=os.environ.get("PGPORT")
         )
     return g.db
 

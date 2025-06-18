@@ -12,3 +12,6 @@ __pycache__/
 generated_spider.png
 generated_timeseries.png
 index_data.csv
+
+# scripts
+azure_push.sh

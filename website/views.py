@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from . import get_db
 from werkzeug.security import generate_password_hash, check_password_hash
+from create_db import init_schema
 
 views = Blueprint("views", __name__)
 
@@ -90,3 +91,13 @@ def selection():
 def clear_session():
     session.clear()
     return redirect(url_for("views.root"))
+
+# DEBUG ROUTE
+# WIPES DB ON CREATION - ONLY RUN ON INIT
+@views.route("/init_db")
+def init_db_route(): # creates schema
+    try:
+        init_schema()
+        return "Schema initialized successfully"
+    except Exception as e:
+        return f"Error initalizing db"
