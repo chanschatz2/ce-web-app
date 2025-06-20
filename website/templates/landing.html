@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Welcome - Circularity Index{% endblock %}
+
+{% block content %}
+<!-- Navbar with Login Button -->
+<nav class="navbar navbar-light bg-white shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="#">Circularity Index</a>
+    <a href="{{ url_for('views.login') }}" class="btn btn-outline-primary">Login</a>
+  </div>
+</nav>
+
+<section class="py-5 bg-light text-center">
+  <div class="container">
+    <h1 class="display-5 fw-bold">Track and Improve Your Sustainability</h1>
+    <p class="lead mt-3">This tool helps you measure your company’s circularity performance in waste, water, energy, and emissions.</p>
+  </div>
+</section>
+
+<!-- Features with Placeholders -->
+<section class="py-5">
+  <div class="container">
+    <div class="row g-5 text-center">
+      <div class="col-md-4">
+        <img src="https://picsum.photos/250/250" class="mb-3" alt="Placeholder Image">
+        <h4 class="fw-bold">Input Your Data</h4>
+        <p class="text-muted">Simple forms to enter your company's sustainability data across various categories.</p>
+      </div>
+      <div class="col-md-4">
+        <img src="https://picsum.photos/250/250" class="mb-3" alt="Placeholder Image">
+        <h4 class="fw-bold">Visualize Progress</h4>
+        <p class="text-muted">Get insightful charts and radar plots of your performance over time.</p>
+      </div>
+      <div class="col-md-4">
+        <img src="https://picsum.photos/250/250" class="mb-3" alt="Placeholder Image">
+        <h4 class="fw-bold">Export & Share</h4>
+        <p class="text-muted">Download your data in Excel format to share your results and review later.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-4 text-center text-muted bg-light">
+  <small> {{ current_year }} Circularity Index Web App</small>
+</footer>
+{% endblock %}

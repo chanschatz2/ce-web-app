@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from . import get_db
 from werkzeug.security import generate_password_hash, check_password_hash
 from create_db import init_schema
+import datetime
 
 views = Blueprint("views", __name__)
 
@@ -21,7 +22,7 @@ INDUSTRIES = {
 def root(): # reroutes to dashboard if logged in, otherwise to login
     if 'company_id' in session:
         return redirect(url_for("views.dashboard"))
-    return redirect(url_for("views.login"))
+    return render_template("landing.html", current_year=datetime.datetime.now().year)
 
 @views.route("/login", methods=["GET", "POST"])
 def login():
