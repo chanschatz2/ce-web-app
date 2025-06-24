@@ -19,13 +19,14 @@ INDUSTRIES = {
 }
 
 @views.route("/", methods=["GET", "POST"])
-def root(): # reroutes to dashboard if logged in, otherwise to login
-    if 'company_id' in session:
-        return redirect(url_for("views.dashboard"))
+def root():
     return render_template("landing.html", current_year=datetime.datetime.now().year)
 
 @views.route("/login", methods=["GET", "POST"])
 def login():
+    if 'company_id' in session: # if logged in, redirects to dashboard
+        return redirect(url_for("views.dashboard"))
+
     if request.method == "POST":
         company_id = request.form.get("company_id")
         password = request.form.get("password")
