@@ -4,7 +4,12 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="text-center">Data Input - Circularity Index</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Data Input - Circularity Index</h2>
+        <div class="text-muted" style="margin-left: 20px;">
+            {{ "sector_placeholder" }} - {{ "industry_placeholder" }}
+        </div>
+    </div>
 
     <!-- Error Message Flash -->
     {% with messages = get_flashed_messages(with_categories=true) %}

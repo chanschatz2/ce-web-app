@@ -4,22 +4,43 @@
 {% block content %}
 <div class="container-fluid">
     <div class="row">
-        <!-- Sidebar -->
+        <!-- Tools Sidebar -->
         <div class="col-md-3 bg-light p-4 border-end" style="min-height: 100vh;">
             <h4 class="mb-4">Tools</h4>
             <div class="d-grid gap-3">
-                <a href="{{ url_for('views.selection') }}" class="btn btn-outline-primary">Begin Circularity Calculation</a>
-                <a href="{{ url_for('views.clear_session') }}" class="btn btn-outline-primary">Clear Session / Logout</a>
-                <a class="btn btn-outline-primary">History</a>
-                <a class="btn btn-outline-primary">Help</a>
+                <a href="#" class="btn btn-outline-primary">Tool 1</a>
+                <a href="#" class="btn btn-outline-primary">Tool 2</a>
+                <a href="#" class="btn btn-outline-primary">Tool 3</a>
+                <a href="#" class="btn btn-outline-primary">Tool 4</a>
             </div>
         </div>
-        
+
         <!-- Main Content -->
         <div class="col-md-9 p-5">
-            <h2>Welcome, {{ session.company_id }}</h2>
-            <p class="lead mt-4">Central hub for navigating the Circularity Index Web App.</p>
-            <p class="text-muted">(Main content and description of the app TBD)</p>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Circularity Assessment History</h2>
+                <a href="{{ url_for('views.selection') }}" class="btn btn-uw btn-lg w-65 mb-3">New Assessment</a>
+            </div>
+
+            {% for assessment in assessments %}
+            <div class="card mb-3">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title mb-1">{{ assessment.date }}</h5>
+                        <p class="card-text mb-0">
+                            {{ assessment.sector }} - {{ assessment.industry }} |
+                            Score: {{ assessment.score }}
+                        </p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="btn btn-outline-primary">View</a>
+                        <button class="btn btn-outline-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <p class="text-muted">No assessments available yet.</p>
+            {% endfor %}
         </div>
     </div>
 </div>

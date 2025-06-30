@@ -1,78 +1,88 @@
 {% extends "base.html" %}
-
-{% block title %}Select Sector - Circularity Index{% endblock %}
+{% block title %}Start New Assessment{% endblock %}
 
 {% block content %}
-<form method="post" action="{{ url_for('views.selection') }}">
-<div class="container text-center mt-5">
-    <h2>Select Your Sector</h2>
-
-    <!-- Sector Buttons -->
-    <div class="row justify-content-center mt-3">
-        <div class="col-md-6">
-            <div class="row g-3">
-                <div class="col-6">
-                    <button type="button" class="btn btn-primary sector-btn w-100 py-4" data-sector="Energy">Energy</button>
-                </div>
-                <div class="col-6">
-                    <button type="button" class="btn btn-success sector-btn w-100 py-4" data-sector="Services">Services</button>
-                </div>
-                <div class="col-6">
-                    <button type="button" class="btn btn-warning sector-btn w-100 py-4" data-sector="Manufacturing">Manufacturing</button>
-                </div>
-                <div class="col-6">
-                    <button type="button" class="btn btn-danger sector-btn w-100 py-4" data-sector="Automotive">Automotive</button>
-                </div>
-            </div>
+<div class="container mt-5" style="max-width: 600px;">
+    <h2 class="mb-4 text-center">New Circularity Assessment</h2>
+    <form method="post" enctype="multipart/form-data">
+        <!-- Sector Dropdown -->
+        <div class="mb-3">
+            <label for="sector" class="form-label">Sector</label>
+            <select class="form-select" name="sector" id="sector" required>
+                <option value="">-- Select a Sector --</option>
+                {% for s in industries %}
+                <option value="{{ s }}">{{ s }}</option>
+                {% endfor %}
+            </select>
         </div>
-    </div>
 
-    <!-- Industry Dropdown -->
-    <div id="industry-selection" class="mt-4 d-none">
-        <label for="industry" class="form-label">Select Your Industry:</label>
-        <div class="dropdown-container">
-            <select id="industry" name="industry" class="form-select">
+        <!-- Industry Dropdown -->
+        <div class="mb-3">
+            <label for="industry" class="form-label">Industry</label>
+            <select class="form-select" name="industry" id="industry" disabled required>
                 <option value="">-- Select an Industry --</option>
             </select>
         </div>
-    </div>
 
-    <input type="hidden" name="sector" id="selected-sector">
-    
-    <!-- Proceed and Back to Dashboard Buttons -->
-    <div class="d-flex justify-content-center mt-3 gap-2 d-none" id="button-row">
-        <a href="{{ url_for('views.dashboard') }}" class="btn btn-outline-secondary" type="button">Back to Dashboard</a>
-        <button type="submit" id="proceed-btn" class="btn btn-primary">Proceed</button>
-    </div>
+        <!-- Initialize Responses -->
+        <div class="mb-4">
+            <label class="form-label">Initialize Responses</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="init_method" value="none" id="init-none" checked>
+                <label class="form-check-label" for="init-none">None (start from blank)</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="init_method" value="file" id="init-file">
+                <label class="form-check-label" for="init-file">From File</label>
+                <input type="file" name="excel_file" id="file-input" class="form-control mt-2 d-none">
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="init_method" value="ai" id="init-ai">
+                <label class="form-check-label" for="init-ai">With AI</label>
+                <button type="button" id="ai-button" class="btn btn-outline-secondary btn-sm mt-2 d-none">TODO</button>
+            </div>
+        </div>
 
+        <!-- Form Buttons -->
+        <div class="d-flex justify-content-between">
+            <a href="{{ url_for('views.dashboard') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Begin Assessment</button>
+        </div>
+    </form>
 </div>
-</form>
 
-<!-- JS reveals buttons and creates dropdowns -->
+<!-- JS for Dropdown Logic and Dynamic Elements -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const industries = JSON.parse('{{ industries | tojson | safe }}');
+        const sectorSelect = document.getElementById("sector");
+        const industrySelect = document.getElementById("industry");
+        const initRadios = document.querySelectorAll("input[name='init_method']");
+        const fileInput = document.getElementById("file-input");
+        const aiButton = document.getElementById("ai-button");
 
-        document.querySelectorAll(".sector-btn").forEach(button => {
-            button.addEventListener("click", function () {
-                document.getElementById("selected-sector").value = this.getAttribute("data-sector");
+        sectorSelect.addEventListener("change", function () {
+            const selectedSector = this.value;
+            industrySelect.innerHTML = '<option value="">-- Select an Industry --</option>';
 
-                const industryDropdown = document.getElementById("industry");
-                industryDropdown.innerHTML = '<option value="">-- Select an Industry --</option>';
-
-                industries[this.getAttribute("data-sector")].forEach(industry => {
-                    const option = document.createElement("option");
-                    option.value = industry;
-                    option.textContent = industry;
-                    industryDropdown.appendChild(option);
+            if (industries[selectedSector]) {
+                industries[selectedSector].forEach(function (industry) {
+                    const opt = document.createElement("option");
+                    opt.value = industry;
+                    opt.textContent = industry;
+                    industrySelect.appendChild(opt);
                 });
-
-                document.getElementById("industry-selection").classList.remove("d-none");
-            });
+                industrySelect.disabled = false;
+            } else {
+                industrySelect.disabled = true;
+            }
         });
 
-        document.getElementById("industry").addEventListener("change", function () {
-            document.getElementById("button-row").classList.toggle("d-none", !this.value);
+        initRadios.forEach(function (radio) {
+            radio.addEventListener("change", function () {
+                fileInput.classList.toggle("d-none", this.value !== "file");
+                aiButton.classList.toggle("d-none", this.value !== "ai");
+            });
         });
     });
 </script>

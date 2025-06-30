@@ -66,32 +66,19 @@ h2 {
 }
 
 /*
-   Sector Button Styling
+   Dashboard Begin Assessment Button
 */
-.sector-btn {
-    font-size: 20px;
-    font-weight: bold;
+.btn-uw {
+    background-color: #c5050c;  /* UW-Madison red */
+    color: white;
+    border: none;
 }
 
-.sector-btn[data-sector="Energy"] {
-    background-color: #b5de2b;
+.btn-uw:hover {
+    background-color: #9e040a;  /* darker on hover */
     color: white;
 }
 
-.sector-btn[data-sector="Services"] {
-    background-color: #1f9e89;
-    color: white;
-}
-
-.sector-btn[data-sector="Manufacturing"] {
-    background-color: #31688e;
-    color: white;
-}
-
-.sector-btn[data-sector="Automotive"] {
-    background-color: #482878;
-    color: white;
-}
 
 /*
    Dropdown & Forms

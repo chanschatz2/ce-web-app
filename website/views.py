@@ -67,7 +67,24 @@ def register():
 def dashboard():
     if 'company_id' not in session:
         return redirect(url_for('views.login'))
-    return render_template("dashboard.html")
+    
+    # PLACEHOLDER DATA
+    assessments = [
+        {
+            "date": "Jun 24, 2025",
+            "sector": "Energy",
+            "industry": "Water Utilities",
+            "score": 0.7
+        },
+        {
+            "date": "May 12, 2025",
+            "sector": "Manufacturing",
+            "industry": "Auto Parts",
+            "score": 0.65
+        }
+    ]
+
+    return render_template("dashboard.html", assessments=assessments)
 
 @views.route("/selection", methods=["GET", "POST"])
 def selection():
