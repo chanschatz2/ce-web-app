@@ -3,6 +3,9 @@ from . import get_db
 from werkzeug.security import generate_password_hash, check_password_hash
 from create_db import init_schema
 import datetime
+from .data_input import excel_upload # borrowing excel upload logic
+from datetime import timezone
+import pytz # for CST timezone
 
 views = Blueprint("views", __name__)
 
@@ -12,7 +15,7 @@ manufacturing_i = ["Manufacturing"]
 automotive_i = []
 
 INDUSTRIES = {
-    "Energy": energy_i,
+    "Energy&Utilities": energy_i,
     "Services": services_i,
     "Manufacturing": manufacturing_i,
     "Automotive": automotive_i
@@ -78,6 +81,13 @@ def dashboard():
     """, (session["user_id"],))
     assessments = cur.fetchall()
 
+    # convert to CST
+    central = pytz.timezone("America/Chicago")
+
+    for row in assessments:
+        if isinstance(row["created_at"], datetime.datetime):
+            row["created_at"] = row["created_at"].replace(tzinfo=timezone.utc).astimezone(central)
+
     return render_template("dashboard.html", assessments=assessments)
 
 # Delete Assessment
@@ -110,10 +120,6 @@ def selection():
         sector = request.form.get("sector")
         industry = request.form.get("industry")
 
-        # TODO: CHANGE LATER, JUST FOR PROTOTYPE:
-        if sector == "Energy":
-            sector = "Energy&Utilities"
-
         session['sector'] = sector
         session['industry'] = industry
 
@@ -121,13 +127,34 @@ def selection():
         session.pop("responses_loaded", None)
         session.pop("responses_by_year", None)
 
-        # create new assessment
+        # Create new assessment
         db = get_db()
         cur = db.cursor()
         cur.execute("INSERT INTO assessments (user_id, sector, industry) VALUES (%s, %s, %s) RETURNING id",
             (session['user_id'], sector, industry)) # return assessment "id" for session storage
         session['assessment_id'] = cur.fetchone()[0] # current assessment being worked on
         db.commit()
+
+        # Initialize from file if selected
+        if request.form.get("init_method") == "file":
+            file = request.files.get("excel_file")
+            if file and file.filename.endswith(".xlsx"):
+                responses_by_year = {}
+                responses_by_year = excel_upload(file, responses_by_year)
+
+                cur = db.cursor()
+                for year, year_data in responses_by_year.items():
+                    for q_id, value in year_data.items():
+                        cur.execute("""
+                            INSERT INTO responses (assessment_id, year, question_id, response)
+                            VALUES (%s, %s, %s, %s)
+                            ON CONFLICT (assessment_id, year, question_id)
+                            DO UPDATE SET response = EXCLUDED.response
+                        """, (session['assessment_id'], int(year), q_id, value))
+                db.commit()
+
+                session["responses_by_year"] = responses_by_year
+                session["current_year"] = min(responses_by_year.keys())
 
         return redirect(url_for("data_input.data_input_page", sector=sector, industry=industry))
     return render_template("selection.html", industries=INDUSTRIES)

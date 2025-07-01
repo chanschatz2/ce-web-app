@@ -220,7 +220,7 @@ def data_input_page():
             responses = session['responses_by_year'].get(current_year, {})
 
             return render_template("data_input.html", questions=sec_questions,
-                           responses=responses, current_year=current_year)
+                           responses=responses, current_year=current_year, sector=session["sector"], industry=session["industry"])
 
         # Excel download handling
         if request.form.get("download_excel") == "true":
@@ -242,7 +242,7 @@ def data_input_page():
             responses = responses_by_year.get(str(current_year), {})
             session_responses(responses_by_year)
             return render_template("data_input.html", questions=sec_questions,
-                           responses=responses, current_year=current_year)
+                           responses=responses, current_year=current_year, sector=session["sector"], industry=session["industry"])
         
         if request.form.get("visualize") == "true" or request.form.get("back_to_dash") == "true":
             assessment_id = session.get("assessment_id") # ensure current assessment being worked on
