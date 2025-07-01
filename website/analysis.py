@@ -3,7 +3,7 @@ from .questions import compute_indices
 import pandas as pd
 import os
 import subprocess
-import datetime
+from . import get_db
 
 analysis = Blueprint("analysis", __name__)
 
@@ -37,6 +37,17 @@ def analysis_page():
     df.index.name = 'year'
     df = df.sort_index()
     df["CE_Index"] = df.mean(axis=1)
+
+    # add to table
+    if "assessment_id" in session:
+        avg_score = float(round(df["CE_Index"].mean(), 4)) # numpy float64 to float
+        db = get_db()
+        cur = db.cursor()
+        cur.execute(
+            "UPDATE assessments SET score = %s WHERE id = %s",
+            (avg_score, session["assessment_id"])
+        )
+        db.commit()
 
     # save to csv for plots.R
     base_dir = os.path.dirname(__file__)

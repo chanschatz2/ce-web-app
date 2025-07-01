@@ -88,15 +88,25 @@ def excel_upload(file, responses):
     return responses
 
 def print_db(cur):
-    print("\n DEBUG: Companies", flush=True)
-    cur.execute("SELECT * FROM companies")
+    print("\n DEBUG: Users", flush=True)
+    cur.execute("SELECT * FROM users")
+    for row in cur.fetchall():
+        print(row, flush=True)
+
+    print("\n DEBUG: Assessments", flush=True)
+    cur.execute("SELECT * FROM assessments")
     for row in cur.fetchall():
         print(row, flush=True)
 
     print("\n DEBUG: Responses", flush=True)
-    cur.execute("SELECT * FROM responses ORDER BY company_id, year, question_id")
+    cur.execute("""
+        SELECT r.*, a.user_id FROM responses r
+        JOIN assessments a ON r.assessment_id = a.id
+        ORDER BY a.user_id, r.year, r.question_id
+    """)
     for row in cur.fetchall():
         print(row, flush=True)
+
 
 @data_input.route('/data_input', methods=['GET', 'POST'])
 def data_input_page():
@@ -122,7 +132,7 @@ def data_input_page():
     """
     
         Current SQL logic (Jun 3 25):
-        - Read and write company responses only when entering and leaving data_input page
+        - Read and write user responses only when entering and leaving data_input page
         - To be wary of data_input route refreshes (year change, download, etc), track entering
             page with session["responses_loaded"] to flag when to pull responses
         - Unflag session["responses_loaded"] when outside data_input
@@ -133,10 +143,27 @@ def data_input_page():
     if request.method == "GET":
         # LOAD RESPONSES FROM DATABASE ONCE
         if "responses_loaded" not in session:
-            company_id = session["company_id"]
+            # Set current assessment being worked on
+            assessment_id = request.args.get("assessment_id") or session["assessment_id"]
+
+            # Load sector and industry from DB if arriving via URL ("View assessment button on dashboard")
+            if request.args.get("assessment_id"):
+                db = get_db()
+                cur = db.cursor()
+                cur.execute("SELECT sector, industry FROM assessments WHERE id = %s", (assessment_id,))
+                row = cur.fetchone()
+                if row:
+                    session["sector"], session["industry"] = row
+
+            if not assessment_id:
+                flash("Assessment ID not provided", "danger")
+                return redirect(url_for("views.dashboard"))
+            session["assessment_id"] = int(assessment_id)
+
+
             db = get_db()
             cur = db.cursor()
-            cur.execute("SELECT year, question_id, response FROM responses WHERE company_id = %s", (company_id,))
+            cur.execute("SELECT year, question_id, response FROM responses WHERE assessment_id = %s", (assessment_id,))
             rows = cur.fetchall()
 
             responses_by_year = {}
@@ -148,8 +175,6 @@ def data_input_page():
 
             session["responses_by_year"] = responses_by_year
             session["responses_loaded"] = True
-
-            print_db(cur)
 
     if request.method == "POST":        
         request_year = int(request.form.get("year", current_year))
@@ -219,9 +244,14 @@ def data_input_page():
             return render_template("data_input.html", questions=sec_questions,
                            responses=responses, current_year=current_year)
         
-        if request.form.get("visualize") == "true":
+        if request.form.get("visualize") == "true" or request.form.get("back_to_dash") == "true":
+            assessment_id = session.get("assessment_id") # ensure current assessment being worked on
+            print(assessment_id)
+            if not assessment_id:
+                flash("No active assessment found.", "danger")
+                return redirect(url_for("views.dashboard"))
+
             # Only writing to db when done editing responses
-            company_id = session["company_id"]
             current_year = session["current_year"]
             responses_by_year = session["responses_by_year"]
             db = get_db()
@@ -230,12 +260,16 @@ def data_input_page():
             for year, year_data in responses_by_year.items():
                 for q_id, value in year_data.items():
                     cur.execute("""
-                        INSERT INTO responses (company_id, year, question_id, response)
+                        INSERT INTO responses (assessment_id, year, question_id, response)
                         VALUES (%s, %s, %s, %s)
-                        ON CONFLICT (company_id, year, question_id)
+                        ON CONFLICT (assessment_id, year, question_id)
                         DO UPDATE SET response = EXCLUDED.response
-                    """, (company_id, int(year), q_id, value))
+                    """, (assessment_id, int(year), q_id, value))
             db.commit()
+
+            print("----- AFTER INSERTION ------")
+            print_db(cur)
+            
             return redirect(url_for("analysis.analysis_page"))
 
         # Ensure responses_by_year is not sparse
@@ -248,4 +282,4 @@ def data_input_page():
 
     # reload webpage
     return render_template("data_input.html", questions=sec_questions,
-                           responses=responses, current_year=current_year)
+                           responses=responses, current_year=current_year, sector=session["sector"], industry=session["industry"])

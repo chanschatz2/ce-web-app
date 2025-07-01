@@ -1,6 +1,7 @@
 import os
 from flask import Flask, g
 import psycopg2
+import psycopg2.extras
 from dotenv import load_dotenv
 
 load_dotenv() # load env variables
@@ -12,7 +13,8 @@ def get_db():
             database=os.environ.get("PGDATABASE"),
             user=os.environ.get("PGUSER"),
             password=os.environ.get("PGPASSWORD"),
-            port=os.environ.get("PGPORT")
+            port=os.environ.get("PGPORT"),
+            cursor_factory=psycopg2.extras.DictCursor # for pulling of db as dict
         )
     return g.db
 

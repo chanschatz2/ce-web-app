@@ -11,12 +11,13 @@ RUN apt-get update; apt-get install -y \
 
 WORKDIR /app
 
+# R Packages
+COPY install_r_packages.R /tmp/install_r_packages.R
+RUN Rscript /tmp/install_r_packages.R
+
 COPY . .
 
 RUN pip3 install -r requirements.txt --break-system-packages
-
-# R Packages
-RUN Rscript -e "install.packages(c('fmsb', 'ggplot2'), repos='https://cloud.r-project.org')"
 
 CMD ["python3", "main.py"]
 

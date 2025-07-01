@@ -1,17 +1,27 @@
 DROP TABLE IF EXISTS responses;
-DROP TABLE IF EXISTS companies;
+DROP TABLE IF EXISTS companies; -- legacy name for users
+DROP TABLE IF EXISTS assessments;
+DROP TABLE IF EXISTS users;
 
-CREATE TABLE companies (
+CREATE TABLE users (
     id TEXT PRIMARY KEY,
-    sector TEXT,
     password TEXT
+);
+
+CREATE TABLE assessments (
+    id SERIAL PRIMARY KEY,
+    user_id TEXT REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    sector TEXT,
+    industry TEXT,
+    score NUMERIC
 );
 
 CREATE TABLE responses (
     id SERIAL PRIMARY KEY,
-    company_id TEXT REFERENCES companies(id),
+    assessment_id INTEGER REFERENCES assessments(id) ON DELETE CASCADE,
     year INTEGER,
     question_id TEXT,
     response TEXT,
-    UNIQUE(company_id, year, question_id)
+    UNIQUE(assessment_id, year, question_id)
 );
