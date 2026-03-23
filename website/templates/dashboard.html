@@ -50,7 +50,7 @@
                     </div>
                     <!-- View and Delete Assessment -->
                     <div class="d-flex gap-2">
-                        <a href="{{ url_for('data_input.data_input_page', assessment_id=assessment.id) }}" class="btn btn-outline-primary">View</a>
+                        <a href="{{ url_for('data_input.data_input_page', assessment_id=assessment.id) }}" class="btn btn-outline-primary">View and Edit</a>
 
                         <form method="post" action="{{ url_for('views.delete_assessment') }}">
                             <input type="hidden" name="assessment_id" value="{{ assessment.id }}">

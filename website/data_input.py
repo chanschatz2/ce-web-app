@@ -146,10 +146,11 @@ def data_input_page():
             # Set current assessment being worked on
             assessment_id = request.args.get("assessment_id") or session["assessment_id"]
 
+            db = get_db()
+            cur = db.cursor()
+
             # Load sector and industry from DB if arriving via URL ("View assessment button on dashboard")
-            if request.args.get("assessment_id"):
-                db = get_db()
-                cur = db.cursor()
+            if "sector" not in session or "industry" not in session:
                 cur.execute("SELECT sector, industry FROM assessments WHERE id = %s", (assessment_id,))
                 row = cur.fetchone()
                 if row:
@@ -160,9 +161,6 @@ def data_input_page():
                 return redirect(url_for("views.dashboard"))
             session["assessment_id"] = int(assessment_id)
 
-
-            db = get_db()
-            cur = db.cursor()
             cur.execute("SELECT year, question_id, response FROM responses WHERE assessment_id = %s", (assessment_id,))
             rows = cur.fetchall()
 
@@ -265,6 +263,11 @@ def data_input_page():
                         ON CONFLICT (assessment_id, year, question_id)
                         DO UPDATE SET response = EXCLUDED.response
                     """, (assessment_id, int(year), q_id, value))
+            
+            # update timestamp
+            cur.execute("UPDATE assessments SET created_at = CURRENT_TIMESTAMP WHERE id = %s",
+                (assessment_id,))
+
             db.commit()
 
             print("----- AFTER INSERTION ------")

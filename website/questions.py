@@ -16,7 +16,7 @@ questions = {
     7: "Water Recycled or Reused [m3]",
 
     # Question's class: Procurement - Production & Packaging
-    8: "Non-renewabe materials used [metric ton]",
+    8: "Non-renewable materials used [metric ton]",
     9: "Non-renewable packaging material used [metric ton]",
     10: "Renewable material used [metric ton]",
     11: "Renewable packaging material used [metric ton]",
